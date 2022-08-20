@@ -8,6 +8,11 @@ class ShoppingItemSerializer(serializers.ModelSerializer):
         fields = ["id", "name", "purchased"]
         read_only_fields = ("id",)
 
+    def create(self, validated_data, **kwargs):
+        request_obj = self.context["request"]
+        validated_data["shopping_list_id"] = request_obj.parser_context["kwargs"]["pk"]
+        return super(ShoppingItemSerializer, self).create(validated_data)
+
 
 class ShoppingListSerializer(serializers.ModelSerializer):
     shopping_items = ShoppingItemSerializer(many=True, read_only=True)
