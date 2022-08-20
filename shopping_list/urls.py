@@ -1,11 +1,14 @@
-from django.urls import include, path
-from rest_framework import routers
+from django.urls import path
 
-from shopping_list.api.viewsets import ShoppingItemViewSet
-
-router = routers.DefaultRouter()
-router.register("shopping-items", ShoppingItemViewSet, basename="shopping-items")
+from shopping_list.api.views import ListAddShoppingList, ShoppingListDetail
 
 urlpatterns = [
-    path("api/", include(router.urls)),
+    path(
+        "api/shopping-lists/", ListAddShoppingList.as_view(), name="all_shopping_lists"
+    ),
+    path(
+        "api/shopping-lists/<uuid:pk>/",
+        ShoppingListDetail.as_view(),
+        name="shopping_list_detail",
+    ),
 ]
