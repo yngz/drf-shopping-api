@@ -16,3 +16,9 @@ class ShoppingListDetail(generics.RetrieveUpdateDestroyAPIView):
 class AddShoppingItem(generics.CreateAPIView):
     queryset = ShoppingItem.objects.all()
     serializer_class = ShoppingItemSerializer
+
+
+class ShoppingItemDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = ShoppingItem.objects.all()
+    serializer_class = ShoppingItemSerializer
+    lookup_url_kwarg = "item_pk"
