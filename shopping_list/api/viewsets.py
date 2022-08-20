@@ -13,6 +13,8 @@ class ShoppingItemViewSet(ModelViewSet):
     @action(
         detail=False,
         methods=["DELETE"],
+        url_path="delete-all-purchased",
+        url_name="delete-all-purchased",
     )
     def delete_purchased(self, request):
         ShoppingItem.objects.filter(purchased=True).delete()
@@ -21,6 +23,8 @@ class ShoppingItemViewSet(ModelViewSet):
     @action(
         detail=False,
         methods=["PATCH"],
+        url_path="mark-bulk-purchased",
+        url_name="mark-bulk-purchased",
     )
     def mark_bulk_purchased(self, request):
         try:
