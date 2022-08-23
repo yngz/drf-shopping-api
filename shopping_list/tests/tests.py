@@ -2,7 +2,6 @@ import pytest
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APIClient
-
 from shopping_list.models import ShoppingItem, ShoppingList
 
 
