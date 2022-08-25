@@ -6,8 +6,9 @@ from shopping_list.models import ShoppingItem, ShoppingList
 
 @pytest.fixture(scope="session")
 def create_shopping_item():
-    def _create_shopping_item(name):
+    def _create_shopping_item(name, user):
         shopping_list = ShoppingList.objects.create(name="My shopping list")
+        shopping_list.members.add(user)
         shopping_item = ShoppingItem.objects.create(
             name=name, purchased=False, shopping_list=shopping_list
         )
@@ -32,3 +33,14 @@ def create_authenticated_client():
         return client
 
     return _create_authenticated_client
+
+
+@pytest.fixture(scope="session")
+def create_shopping_list():
+    def _create_shopping_list(user):
+        shopping_list = ShoppingList.objects.create(name="Groceries")
+        shopping_list.members.add(user)
+
+        return shopping_list
+
+    return _create_shopping_list
