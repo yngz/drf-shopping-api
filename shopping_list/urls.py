@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import include, path
 
 from shopping_list.api.views import (
     AddShoppingItem,
@@ -8,6 +8,7 @@ from shopping_list.api.views import (
 )
 
 urlpatterns = [
+    path("api-auth/", include("rest_framework.urls", namespace="rest_framework")),
     path(
         "api/shopping-lists/", ListAddShoppingList.as_view(), name="all-shopping-lists"
     ),
