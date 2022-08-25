@@ -69,6 +69,61 @@ def test_shopping_list_is_retrieved_by_id(
 
 
 @pytest.mark.django_db
+def test_max_3_shopping_items_on_shopping_list(
+    create_user, create_authenticated_client, create_shopping_list
+):
+    user = create_user()
+    client = create_authenticated_client(user)
+
+    shopping_list = create_shopping_list(user)
+
+    ShoppingItem.objects.create(
+        shopping_list=shopping_list, name="Eggs", purchased=False
+    )
+    ShoppingItem.objects.create(
+        shopping_list=shopping_list, name="Chocolate", purchased=False
+    )
+    ShoppingItem.objects.create(
+        shopping_list=shopping_list, name="Milk", purchased=False
+    )
+    ShoppingItem.objects.create(
+        shopping_list=shopping_list, name="Mango", purchased=False
+    )
+
+    url = reverse("shopping-list-detail", args=[shopping_list.id])
+
+    response = client.get(url, format="json")
+
+    assert len(response.data["unpurchased_items"]) == 3
+
+
+@pytest.mark.django_db
+def test_all_shopping_items_on_shopping_list_unpurchased(
+    create_user, create_authenticated_client, create_shopping_list
+):
+    user = create_user()
+    client = create_authenticated_client(user)
+
+    shopping_list = create_shopping_list(user)
+
+    ShoppingItem.objects.create(
+        shopping_list=shopping_list, name="Eggs", purchased=False
+    )
+    ShoppingItem.objects.create(
+        shopping_list=shopping_list, name="Chocolate", purchased=True
+    )
+    ShoppingItem.objects.create(
+        shopping_list=shopping_list, name="Milk", purchased=False
+    )
+
+    url = reverse("shopping-list-detail", args=[shopping_list.id])
+
+    response = client.get(url, format="json")
+
+    assert len(response.data["unpurchased_items"]) == 2
+
+
+@pytest.mark.django_db
 def test_admin_can_retrieve_shopping_list(
     create_user, create_shopping_list, admin_client
 ):
@@ -105,8 +160,8 @@ def test_shopping_list_includes_only_corresponding_items(
     url = reverse("shopping-list-detail", args=[shopping_list.id])
     response = client.get(url)
 
-    assert len(response.data["shopping_items"]) == 1
-    assert response.data["shopping_items"][0]["name"] == "Eggs"
+    assert len(response.data["unpurchased_items"]) == 1
+    assert response.data["unpurchased_items"][0]["name"] == "Eggs"
 
 
 @pytest.mark.django_db
