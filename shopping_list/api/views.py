@@ -25,10 +25,15 @@ class ShoppingListDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [ShoppingListMembersOnly]
 
 
-class AddShoppingItem(generics.CreateAPIView):
-    queryset = ShoppingItem.objects.all()
+class ListAddShoppingItem(generics.ListCreateAPIView):
     serializer_class = ShoppingItemSerializer
     permission_classes = [AllShoppingItemsShoppingListMembersOnly]
+
+    def get_queryset(self):
+        shopping_list = self.kwargs["pk"]
+        queryset = ShoppingItem.objects.filter(shopping_list=shopping_list)
+
+        return queryset
 
 
 class ShoppingItemDetail(generics.RetrieveUpdateDestroyAPIView):

@@ -1,7 +1,7 @@
 from django.urls import include, path
 
 from shopping_list.api.views import (
-    AddShoppingItem,
+    ListAddShoppingItem,
     ListAddShoppingList,
     ShoppingItemDetail,
     ShoppingListDetail,
@@ -19,8 +19,8 @@ urlpatterns = [
     ),
     path(
         "api/shopping-lists/<uuid:pk>/shopping-items/",
-        AddShoppingItem.as_view(),
-        name="add-shopping-item",
+        ListAddShoppingItem.as_view(),
+        name="list-add-shopping-item",
     ),
     path(
         "api/shopping-lists/<uuid:pk>/shopping-items/<uuid:item_pk>/",
