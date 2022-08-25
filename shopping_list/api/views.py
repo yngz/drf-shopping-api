@@ -15,6 +15,9 @@ class ListAddShoppingList(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         return serializer.save(members=[self.request.user])
 
+    def get_queryset(self):
+        return ShoppingList.objects.filter(members=self.request.user)
+
 
 class ShoppingListDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = ShoppingList.objects.all()
