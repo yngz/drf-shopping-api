@@ -16,7 +16,9 @@ class ListAddShoppingList(generics.ListCreateAPIView):
         return serializer.save(members=[self.request.user])
 
     def get_queryset(self):
-        return ShoppingList.objects.filter(members=self.request.user)
+        return ShoppingList.objects.filter(members=self.request.user).order_by(
+            "-last_interaction"
+        )
 
 
 class ShoppingListDetail(generics.RetrieveUpdateDestroyAPIView):
