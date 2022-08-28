@@ -457,6 +457,28 @@ def test_admin_can_add_shopping_items(create_user, create_shopping_list, admin_c
 
 
 @pytest.mark.django_db
+def test_duplicate_item_on_list_bad_request(
+    create_user, create_authenticated_client, create_shopping_list
+):
+
+    user = create_user()
+    client = create_authenticated_client(user)
+    shopping_list = create_shopping_list(user)
+    ShoppingItem.objects.create(
+        shopping_list=shopping_list, name="Milk", purchased=False
+    )
+
+    url = reverse("list-add-shopping-item", args=[shopping_list.id])
+
+    data = {"name": "Milk", "purchased": False}
+
+    response = client.post(url, data, format="json")
+
+    assert response.status_code == status.HTTP_400_BAD_REQUEST
+    assert len(shopping_list.shopping_items.all()) == 1
+
+
+@pytest.mark.django_db
 def test_shopping_item_is_retrieved_by_id(
     create_user, create_authenticated_client, create_shopping_item
 ):

@@ -16,8 +16,14 @@ class ShoppingItemSerializer(serializers.ModelSerializer):
         read_only_fields = ("id",)
 
     def create(self, validated_data, **kwargs):
-        request_obj = self.context["request"]
-        validated_data["shopping_list_id"] = request_obj.parser_context["kwargs"]["pk"]
+        shopping_list_id = self.context["request"].parser_context["kwargs"]["pk"]
+        if ShoppingList.objects.get(id=shopping_list_id).shopping_items.filter(
+            name=validated_data["name"], purchased=False
+        ):
+            raise serializers.ValidationError("Item already exists on the list.")
+
+        validated_data["shopping_list_id"] = shopping_list_id
+
         return super(ShoppingItemSerializer, self).create(validated_data)
 
 
