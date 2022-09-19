@@ -2,11 +2,10 @@ from datetime import datetime, timedelta
 from unittest import mock
 
 import pytest
-from django.contrib.auth.models import User
 from django.urls import reverse
 from django.utils.timezone import make_aware
 from rest_framework import status
-from shopping_list.models import ShoppingItem, ShoppingList
+from shopping_list.models import ShoppingItem, ShoppingList, User
 
 
 @pytest.mark.django_db
