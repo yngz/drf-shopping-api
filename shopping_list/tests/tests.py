@@ -52,8 +52,8 @@ def test_client_retrieves_only_shopping_lists_they_are_member_of(
     url = reverse("all-shopping-lists")
     response = client.get(url)
 
-    assert len(response.data) == 1
-    assert response.data[0]["name"] == "Books"
+    assert len(response.data["results"]) == 1
+    assert response.data["results"][0]["name"] == "Books"
 
 
 @pytest.mark.django_db
@@ -73,9 +73,9 @@ def test_correct_order_shopping_lists(create_user, create_authenticated_client):
     url = reverse("all-shopping-lists")
     response = client.get(url)
 
-    assert response.data[0]["name"] == "New"
-    assert response.data[1]["name"] == "Old"
-    assert response.data[2]["name"] == "Oldest"
+    assert response.data["results"][0]["name"] == "New"
+    assert response.data["results"][1]["name"] == "Old"
+    assert response.data["results"][2]["name"] == "Oldest"
 
 
 @pytest.mark.django_db
@@ -358,9 +358,9 @@ def test_list_shopping_items_is_retrieved_by_shopping_list_member(
     url = reverse("list-add-shopping-item", kwargs={"pk": shopping_list.id})
     response = client.get(url)
 
-    assert len(response.data) == 2
-    assert response.data[0]["name"] == shopping_item_1.name
-    assert response.data[1]["name"] == shopping_item_2.name
+    assert len(response.data["results"]) == 2
+    assert response.data["results"][0]["name"] == shopping_item_1.name
+    assert response.data["results"][1]["name"] == shopping_item_2.name
 
 
 @pytest.mark.django_db
@@ -408,8 +408,8 @@ def test_list_shopping_items_only_the_ones_belonging_to_the_same_shopping_list(
 
     response = client.get(url)
 
-    assert len(response.data) == 1
-    assert response.data[0]["name"] == shopping_item_from_this_list.name
+    assert len(response.data["results"]) == 1
+    assert response.data["results"][0]["name"] == shopping_item_from_this_list.name
 
 
 @pytest.mark.django_db
@@ -700,8 +700,8 @@ def test_shopping_lists_order_changed_when_item_marked_purchased(
 
     response = client.get(shopping_lists_url)
 
-    assert response.data[0]["name"] == "Older"
-    assert response.data[1]["name"] == "Recent"
+    assert response.data["results"][0]["name"] == "Older"
+    assert response.data["results"][1]["name"] == "Recent"
 
 
 @pytest.mark.django_db
